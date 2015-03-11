@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 1
+  content: MyString
+  scheduled_for: 2015-03-11 00:02:53
+  sent_at: 2015-03-11 00:02:53
+
+two:
+  user_id: 1
+  content: MyString
+  scheduled_for: 2015-03-11 00:02:53
+  sent_at: 2015-03-11 00:02:53

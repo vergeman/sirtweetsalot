@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   devise :rememberable, :trackable
   devise :omniauthable, :omniauth_providers => [:twitter]
 
-  #has_many :tweets
+  has_many :tweets
 
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
