@@ -5,4 +5,11 @@ class UsersController < ApplicationController
   def show
   end
 
+#TODO (timezone - should be 'campaign based')
+  def edit
+  end
+
+  def update
+  end
+
 end

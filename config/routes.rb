@@ -8,8 +8,14 @@ Rails.application.routes.draw do
     get 'sign_out', :to => 'devise/sessions#destroy', :as => :destroy_user_session
   end
 
-  resources :users, only: [:show], as: 'account'
+  resources :users, only: [:show, :edit, :update], as: 'account'
   resources :tweets
+  resources :tweets_importers, only: [:new, :create], path: "importer"
+  
+  get "/launch/:id" => "tweets#launch"
+  get "/queue" => "tweets#queue"
+  get "/sent" => "tweets#sent"
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

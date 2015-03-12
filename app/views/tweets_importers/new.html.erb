@@ -1,0 +1,11 @@
+<h1>TweetsImporters#new (/uploads/new)</h1>
+
+<%= form_for @tweets_importer, url: tweets_importers_path do |f| %>
+
+    <div class="field">
+        <%= f.file_field :file %>
+    </div>
+
+    <div class="buttons"><%= f.submit "Import" %></div>
+
+<% end %>

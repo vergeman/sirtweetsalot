@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150311050253) do
+ActiveRecord::Schema.define(version: 20150312003724) do
 
   create_table "tweets", force: :cascade do |t|
     t.integer  "user_id"
@@ -20,8 +20,10 @@ ActiveRecord::Schema.define(version: 20150311050253) do
     t.datetime "sent_at"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
+    t.string   "tweet_id"
   end
 
+  add_index "tweets", ["tweet_id"], name: "index_tweets_on_tweet_id"
   add_index "tweets", ["user_id"], name: "index_tweets_on_user_id"
 
   create_table "users", force: :cascade do |t|
@@ -37,6 +39,13 @@ ActiveRecord::Schema.define(version: 20150311050253) do
     t.datetime "updated_at"
     t.string   "provider"
     t.string   "uid"
+    t.string   "nickname"
+    t.string   "name"
+    t.string   "location"
+    t.string   "image_url"
+    t.string   "description"
+    t.string   "token"
+    t.string   "secret"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true

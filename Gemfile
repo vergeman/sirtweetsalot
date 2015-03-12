@@ -45,6 +45,9 @@ group :development, :test do
 
   gem 'devise'
   gem 'omniauth-twitter'
+  gem 'roo'
+  gem 'annotate'
+  gem 'twitter'
 
+  gem 'bootstrap-sass'
 end
-

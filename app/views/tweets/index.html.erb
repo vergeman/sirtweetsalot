@@ -1,1 +1,8 @@
 <h1>tweets#index</h1>
+
+<table>
+    <% @tweets.each_with_index do |t, i| %>
+        <%= render partial: "show", locals: { t: t, i: i} %>
+    <% end %>
+</table>
+

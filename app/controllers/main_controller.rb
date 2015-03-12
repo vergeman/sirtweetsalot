@@ -1,6 +1,7 @@
 class MainController < ApplicationController
   before_filter :check_authenticated_user
 
+  #landing page
   def index
   end
 
