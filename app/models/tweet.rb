@@ -50,7 +50,7 @@ class Tweet < ActiveRecord::Base
         self.update_attributes(sent_at: client.status(response.id).created_at,
                                tweet_id: response.id,
                                rescheduled_at: nil,
-                               status = "SENT")
+                               status: "SENT")
       end
 
     rescue => e
