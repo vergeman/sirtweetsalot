@@ -1,10 +1,21 @@
+#[FAILED, DUPLICATE, SENT] - not sendable states (end states)
+#[QUEUED, DELAYED] - sendable
+#
+#there can be sent tweets that are 'finished', won't be requeued
+#Handled api erros
+# RateLimit / TooManyRequests
+# Duplicate
+# ?
+
 class Tweet < ActiveRecord::Base
   class RateLimited < StandardError; end
 
   belongs_to :user
 
+  END_STATES = ["FAILED", "DUPLICATE", "SENT"]
+
   scope :sent, -> { where.not(sent_at: nil) }
-  scope :sendable, -> { where(sent_at: nil) }
+  scope :sendable, -> { where.not(status: END_STATES) }
 
   #accessors views
   def scheduled_for_time
@@ -63,7 +74,7 @@ class Tweet < ActiveRecord::Base
 
   def retry?
     #cases that will not be retried
-    return !["FAIL", "DUPLICATE", "SENT"].include?(self.status)
+    return !END_STATES.include?(self.status)
   end
 
 
@@ -77,7 +88,7 @@ class Tweet < ActiveRecord::Base
 
   #error handler
   def handle_error(error)
-    Delayed::Worker.logger.debug "ERRROR"
+    Delayed::Worker.logger.debug "ERROR"
     Delayed::Worker.logger.debug error.inspect
     
     case error
@@ -86,7 +97,9 @@ class Tweet < ActiveRecord::Base
       Delayed::Worker.logger.debug "==Duplicate=="
 
       #FAIL
-      self.update_attributes(rescheduled_at: nil, status: "DUPLICATE")
+      self.update_attributes(rescheduled_at: nil,
+                             status: "DUPLICATE",
+                             sent_at: Time.now.utc)
 
     when Twitter::Error::TooManyRequests,
       Twitter::Error::Forbidden,
@@ -105,8 +118,7 @@ class Tweet < ActiveRecord::Base
     else
 
       #SOME UNKNOWN ERROR
-      Delayed::Worker.logger.debug "==Some error=="
-      Delayed::Worker.logger.debug exception.inspect
+      Delayed::Worker.logger.debug "==Unspecified error=="
       raise UnknownException, error
     end
 
@@ -130,7 +142,8 @@ class Tweet < ActiveRecord::Base
     self.user.update_attribute(:rate_limited_until, Time.at(time).utc ) if new_time_value
 
     self.update_attributes(rescheduled_at: Time.at(time).utc,
-                           status: "RATELIMITED")
+                           status: "DELAYED",
+                           sent_at: Time.now.utc)
   end
 
 end
