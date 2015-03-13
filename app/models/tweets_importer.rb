@@ -9,23 +9,20 @@ class TweetsImporter
   #TODO: 140char check
   def load
     tweets = load_sheet    
-    if tweets.map(&:valid?).all?
 
-      #save and queue
-      tweets.each do |t| 
+    #save to queue
+    tweets.each_with_index do |t, index| 
+      begin
         t.status = "QUEUED"
         TweetJob.set(queue: t.user_id, wait_until: t.scheduled_for).perform_later(t) if t.save!
+      rescue
+        t.errors.add(:row,"#{index+2}")
       end
-
-      true
-    else
-      tweets.each_with_index do |tweet, index|
-        tweet.errors.full_messages.each do |message|
-          errors.add :base, "Row #{index+2}: #{message}"
-        end
-      end
-      false
     end
+
+    #return any errors, agnostic as to their type
+    tweets.map{|t| t.errors.full_messages[0]}.compact!
+
   end
 
   #loop & parse

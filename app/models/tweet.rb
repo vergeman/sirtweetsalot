@@ -12,10 +12,11 @@ class Tweet < ActiveRecord::Base
 
   belongs_to :user
 
-  END_STATES = ["FAILED", "DUPLICATE", "SENT"]
+  SENT_STATES = ["FAILED", "DUPLICATE", "SENT"]
+  SENDING_STATES = ["QUEUED", "DELAYED"]
 
-  scope :sent, -> { where.not(sent_at: nil) }
-  scope :sendable, -> { where.not(status: END_STATES) }
+  scope :sent, -> { where.not(status: SENDING_STATES) }
+  scope :sendable, -> { where.not(status: SENT_STATES) }
 
   #accessors views
   def scheduled_for_time
@@ -50,6 +51,7 @@ class Tweet < ActiveRecord::Base
       if !rate_limited? && retry?
 
         client = self.user.twitter_client
+        self.increment!(:attempts, 1)
         response = client.update!(self.content)
 
         #quick test
@@ -74,7 +76,7 @@ class Tweet < ActiveRecord::Base
 
   def retry?
     #cases that will not be retried
-    return !END_STATES.include?(self.status)
+    return !SENT_STATES.include?(self.status)
   end
 
 
@@ -110,10 +112,15 @@ class Tweet < ActiveRecord::Base
       #Now rate limited
       #Handle errors in Tweet model, want access to error object
       #with appropriate time value
-      set_rate_limited(error.rate_limit.reset_in + 1, true)
 
-      #quick test
-      #set_rate_limited((Time.now + 3.seconds).to_i, true)
+      rate_limit_reset = (Time.now + 5.minutes).to_i
+      if defined?(error.rate_limit.reset_in)
+        rate_limit_reset = error.rate_limit.reset_in || rate_limit_reset
+      end
+      
+      set_rate_limited(rate_limit_reset + 1, true)
+
+
 
     else
 

@@ -1,6 +1,24 @@
-<tr>
-  <td> <%= t.id %> </td>
-  <td> <%= t.content%></td>
-  <td> <%= t.scheduled_for_time %> </td>
-  <td> <%= t.status %> </td>
-<tr>
+<% content_for :tweets_index_title do %>
+    Queue
+<% end %>
+
+<% content_for :tweets_index_header do %>
+    <th>id</th>
+    <th>Tweet</th>
+    <th>Scheduled</th>
+    <th>Status</th>
+    <th>Attempts</th>
+<% end %>
+
+<% content_for :tweets_index_body do %>
+    <% @tweets.each_with_index do |t, i| %>
+        <tr>
+            <td> <%= t.id %> </td>
+            <td> <%= t.content%></td>
+            <td> <%= t.scheduled_for_time %> </td>
+            <td> <%= t.status %> </td>
+            <td> <%= t.attempts %> </td>
+        </tr>
+    <% end %>
+<% end %>
+

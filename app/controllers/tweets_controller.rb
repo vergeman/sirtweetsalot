@@ -32,8 +32,8 @@ class TweetsController < ApplicationController
   def launch
     @tweet = Tweet.find_by_id(params[:id])
     TweetJob.set(queue: @tweet.user.id, wait_until: @tweet.scheduled_for).perform_later(@tweet)
-    #@tweet.deliver
+    @tweet.deliver
     render :show
   end
-  #timezone - scheduled time vs server time relative
+
 end

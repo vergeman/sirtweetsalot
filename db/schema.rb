@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150313035253) do
+ActiveRecord::Schema.define(version: 20150313072353) do
 
   create_table "delayed_jobs", force: :cascade do |t|
     t.integer  "priority",   default: 0, null: false
@@ -32,13 +32,14 @@ ActiveRecord::Schema.define(version: 20150313035253) do
   create_table "tweets", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "content"
-    t.datetime "scheduled_for",  null: false
+    t.datetime "scheduled_for",              null: false
     t.datetime "sent_at"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.string   "tweet_id"
     t.string   "status"
     t.datetime "rescheduled_at"
+    t.integer  "attempts",       default: 0
   end
 
   add_index "tweets", ["tweet_id"], name: "index_tweets_on_tweet_id"

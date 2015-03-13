@@ -1,20 +1,22 @@
-<h2> Queue </h2>
+<%= render partial: "show_queue" if current_page?(queue_path)%>
+<%= render partial: "show_sent" if current_page?(sent_path)%>
+
+<h2>
+    <%= yield :tweets_index_title %>
+</h2>
 
 <hr>
+
 <div class="table-responsive">
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>id</th>
-                <th>Tweet</th>
-                <%= raw "<th>Scheduled</th>" if current_page?(queue_path) %>
-                <%= raw "<th>Sent</th>" if current_page?(sent_path) %>
-                <th>Status</th>
+                <%= yield :tweets_index_header %>
             </tr>
         </thead>
-        <% @tweets.each_with_index do |t, i| %>
-            <%= render partial: "show_queue", locals: { t: t, i: i} if current_page?(queue_path)%>
-            <%= render partial: "show_sent", locals: { t: t, i: i} if current_page?(sent_path)%>
-        <% end %>
+
+        <tbody>
+            <%= yield :tweets_index_body %>
+        </tbody>
     </table>
 </div>
