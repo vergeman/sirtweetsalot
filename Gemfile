@@ -50,4 +50,8 @@ group :development, :test do
   gem 'twitter'
 
   gem 'bootstrap-sass'
+
+  gem 'american_date'
+  gem 'delayed_job_active_record'
+  gem 'daemons'
 end

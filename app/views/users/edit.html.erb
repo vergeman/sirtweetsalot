@@ -1,0 +1,36 @@
+<div class="col-md-4">
+
+    <%= form_for current_user, url: account_path do |f| %>
+        <fieldset>
+            <legend>User</legend>
+
+
+            <div class="form-group">
+                <%= f.label "Email", for: "email" %>
+
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <i class="glyphicon glyphicon-time"></i>
+                    </div>
+                    <%= f.text_field :email, class: "form-control", value: current_user.email %>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <%= f.label "Timezone (required)", for: "timezone" %>
+
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <i class="glyphicon glyphicon-envelope"></i>
+                    </div>
+                    <%= f.time_zone_select :timezone, ActiveSupport::TimeZone.us_zones, {default: current_user.timezone, include_blank: true }, {:class => "form-control"}  %>
+                </div>
+
+            </div>
+            <button type="submit" class="btn btn-default">Save</button>
+
+        </fieldset>
+    <% end %>
+
+</div>

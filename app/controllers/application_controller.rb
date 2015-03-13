@@ -7,4 +7,8 @@ class ApplicationController < ActionController::Base
     new_user_session_path
   end
 
+  def verify_settings
+    flash.now[:alert] = view_context.link_to "You need to set your timezone", edit_account_path(current_user) if current_user.timezone.blank?
+  end
+
 end

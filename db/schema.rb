@@ -11,16 +11,34 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150312003724) do
+ActiveRecord::Schema.define(version: 20150313035253) do
+
+  create_table "delayed_jobs", force: :cascade do |t|
+    t.integer  "priority",   default: 0, null: false
+    t.integer  "attempts",   default: 0, null: false
+    t.text     "handler",                null: false
+    t.text     "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.string   "queue"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority"
 
   create_table "tweets", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "content"
-    t.datetime "scheduled_for", null: false
+    t.datetime "scheduled_for",  null: false
     t.datetime "sent_at"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
     t.string   "tweet_id"
+    t.string   "status"
+    t.datetime "rescheduled_at"
   end
 
   add_index "tweets", ["tweet_id"], name: "index_tweets_on_tweet_id"
@@ -46,6 +64,8 @@ ActiveRecord::Schema.define(version: 20150312003724) do
     t.string   "description"
     t.string   "token"
     t.string   "secret"
+    t.string   "timezone"
+    t.datetime "rate_limited_until"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true

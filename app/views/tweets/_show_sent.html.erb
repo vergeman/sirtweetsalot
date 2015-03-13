@@ -1,0 +1,6 @@
+<tr>
+  <td> <%= t.id %> </td>
+  <td> <%= t.content %></td>
+  <td> <%= t.sent_at_time %> </td>
+  <td> <%= t.errors.full_messages.empty? ? raw("SENT") : t.errors.full_messages  %> </td>
+<tr>

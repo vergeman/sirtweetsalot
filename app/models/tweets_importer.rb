@@ -10,7 +10,13 @@ class TweetsImporter
   def load
     tweets = load_sheet    
     if tweets.map(&:valid?).all?
-      tweets.each(&:save!)
+
+      #save and queue
+      tweets.each do |t| 
+        t.status = "QUEUED"
+        TweetJob.set(queue: t.user_id, wait_until: t.scheduled_for).perform_later(t) if t.save!
+      end
+
       true
     else
       tweets.each_with_index do |tweet, index|
@@ -32,12 +38,14 @@ class TweetsImporter
 
       tweet = Tweet.new(user_id: current_user.id)
       tweet.attributes = row.to_hash.slice(*Tweet.attribute_names)
+      tweet.time_to_utc
       tweet
 
     end
   end
 
   #determine csv/xls, return obj  
+  #TODO: random file name 
   def open_sheet
     case File.extname(file.original_filename)
     when ".csv" then Roo::CSV.new(file.path)

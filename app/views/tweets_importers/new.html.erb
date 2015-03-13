@@ -1,11 +1,20 @@
-<h1>TweetsImporters#new (/uploads/new)</h1>
+<div class="col-md-4">
+    <%= form_for @tweets_importer, url: tweets_importers_path do |f| %>
+        <fieldset>
+            <legend>Import</legend>
+            <div class="form-group">
+                <%= f.label "File", for: "file" %>
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <i class="glyphicon glyphicon-file"></i>
+                    </div>
+                <%= f.file_field :file, class: "form-control" %>
+                </div>
 
-<%= form_for @tweets_importer, url: tweets_importers_path do |f| %>
+            </div>
 
-    <div class="field">
-        <%= f.file_field :file %>
-    </div>
+            <button type="submit" class="btn btn-default">Upload</button>
+        </fieldset>
+    <% end %>
 
-    <div class="buttons"><%= f.submit "Import" %></div>
-
-<% end %>
+</div>

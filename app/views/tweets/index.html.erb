@@ -1,8 +1,20 @@
-<h1>tweets#index</h1>
+<h2> Queue </h2>
 
-<table>
-    <% @tweets.each_with_index do |t, i| %>
-        <%= render partial: "show", locals: { t: t, i: i} %>
-    <% end %>
-</table>
-
+<hr>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>Tweet</th>
+                <%= raw "<th>Scheduled</th>" if current_page?(queue_path) %>
+                <%= raw "<th>Sent</th>" if current_page?(sent_path) %>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <% @tweets.each_with_index do |t, i| %>
+            <%= render partial: "show_queue", locals: { t: t, i: i} if current_page?(queue_path)%>
+            <%= render partial: "show_sent", locals: { t: t, i: i} if current_page?(sent_path)%>
+        <% end %>
+    </table>
+</div>

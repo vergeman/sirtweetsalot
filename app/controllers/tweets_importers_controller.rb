@@ -1,5 +1,5 @@
 class TweetsImportersController < ApplicationController
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!, :verify_settings
 
   #/uploads/new
   def new
@@ -11,10 +11,10 @@ class TweetsImportersController < ApplicationController
   def create
     @tweets_importer = TweetsImporter.new(upload_params)
 
-    #prob be delayed_job
-    @tweets_importer.load
+    #prob be delayed_job - need some error handling
+    flash[:success] = "Tweets Successfully Imported" if @tweets_importer.load
 
-    redirect_to tweets_path
+    redirect_to queue_path
   end
 
 

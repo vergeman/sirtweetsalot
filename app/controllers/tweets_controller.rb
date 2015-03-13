@@ -1,5 +1,5 @@
 class TweetsController < ApplicationController
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!, :verify_settings
 
 #aux routes
   def queue
@@ -31,7 +31,8 @@ class TweetsController < ApplicationController
 #testing route
   def launch
     @tweet = Tweet.find_by_id(params[:id])
-    @tweet.deliver
+    TweetJob.set(queue: @tweet.user.id, wait_until: @tweet.scheduled_for).perform_later(@tweet)
+    #@tweet.deliver
     render :show
   end
   #timezone - scheduled time vs server time relative
