@@ -1,12 +1,14 @@
 class TweetJob < ActiveJob::Base
 
+
   def perform(tweet)
-    log("==DELIVER==")
+    log("JOB: Tweet id: #{tweet.id} | #{tweet.inspect}")
     tweet.deliver
   end
 
+
   after_perform do |job|
-    log("==AFTER_PERFORM==")
+
     tweet = job.arguments.first
 
     #retry logic
@@ -18,15 +20,16 @@ class TweetJob < ActiveJob::Base
 
   end
 
+
   rescue_from(Exception) do |exception|
     log(exception.inspect)
     #self.arguments.first.inspect)
   end  
 
 
-    private
-    def log(text)
-      Delayed::Worker.logger.debug(text)
-    end
+  private
+  def log(text)
+    Delayed::Worker.logger.debug(text)
+  end
 
 end

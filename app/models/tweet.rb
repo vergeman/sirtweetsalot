@@ -22,6 +22,13 @@ class Tweet < ActiveRecord::Base
       .local_to_utc(self.scheduled_for)
   end
 
+  #if task status goes awry, we reset to pristine condition
+  def reset
+    self.update_attributes(status: "QUEUED",
+                           rescheduled_at: nil,
+                           tweet_id: nil,
+                           sent_at: nil)
+  end
 
   #Async Task (DJ)
   #Check the state - is it something to retry?
@@ -40,11 +47,10 @@ class Tweet < ActiveRecord::Base
         #raise Twitter::Error::TooManyRequests, error
 
         #SUCCESS
-        self.sent_at = client.status(response.id).created_at
-        self.tweet_id = response.id
-        self.rescheduled_at = nil
-        self.status = "SENT"
-        self.save
+        self.update_attributes(sent_at: client.status(response.id).created_at,
+                               tweet_id: response.id,
+                               rescheduled_at: nil,
+                               status = "SENT")
       end
 
     rescue => e
