@@ -1,16 +1,18 @@
 <% content_for :tweets_index_title do %>
-    Queue
+QUEUE
 <% end %>
 
 <% content_for :tweets_index_header do %>
-    <th>id</th>
-    <th>Tweet</th>
-    <th>Scheduled</th>
-    <th>Status</th>
-    <th>Attempts</th>
+    <th><%= table_header_link("id", method(:queue_path), "id") %>
+    <th><%= table_header_link("Tweet", method(:queue_path), "content") %></th>
+    <th><%= table_header_link("Scheduled", method(:queue_path), "scheduled_for") %></th>
+    <th><%= table_header_link("Status", method(:queue_path), "status") %></th>
+    <th><%= table_header_link("Attempts", method(:queue_path), "attempts")%></th>
+    <th></th>
 <% end %>
 
 <% content_for :tweets_index_body do %>
+
     <% @tweets.each_with_index do |t, i| %>
         <tr>
             <td> <%= t.id %> </td>
@@ -18,7 +20,8 @@
             <td> <%= t.scheduled_for_time %> </td>
             <td> <%= t.status %> </td>
             <td> <%= t.attempts %> </td>
+            <td> <%= render partial: "controls", locals: {t: t} %> </td>
         </tr>
+
     <% end %>
 <% end %>
-

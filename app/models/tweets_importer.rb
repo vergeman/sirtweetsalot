@@ -12,10 +12,13 @@ class TweetsImporter
 
     #save to queue
     tweets.each_with_index do |t, index| 
+
       begin
+
         t.status = "QUEUED"
         TweetJob.set(queue: t.user_id, wait_until: t.scheduled_for).perform_later(t) if t.save!
-      rescue
+
+      rescue => e
         t.errors.add(:row,"#{index+2}")
       end
     end

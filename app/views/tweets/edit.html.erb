@@ -1,0 +1,54 @@
+<% content_for :header do %>
+    <h3>Edit Tweet</h3>
+<% end %>
+
+<%= render partial: "/layouts/flash" %>
+
+
+<div class ="col-md-4">
+    <%= form_for(@tweet) do |f| %>
+
+        <fieldset>
+            <legend> Tweet </legend>
+
+            <div class="form-group">
+                <%= f.label "Status", for: "status" %>
+                <div class="input-group">
+                    <%= @tweet.status %>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <%= f.label "Scheduled", for: "scheduled_for" %>
+
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <i class="glyphicon glyphicon-time"></i>
+                    </div>
+                    <%= f.text_field :scheduled_for, class: "form-control", value: @tweet.scheduled_for %>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <%= f.label "Content", for: "content" %>
+
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <i class="glyphicon glyphicon-time"></i>
+                    </div>
+                    <%= f.text_area :content, class: "form-control", value: @tweet.content %>
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+                <%= f.check_box :reset, checked: false%>
+                <%= f.label "Reset", for: "reset" %>
+            </div>
+
+            <button type="submit" class="btn btn-default">Update</button>
+        </fieldset>
+
+    <% end %>
+</div>

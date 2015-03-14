@@ -12,8 +12,8 @@ class TweetsImportersController < ApplicationController
     @tweets_importer = TweetsImporter.new(upload_params)
 
     #prob be delayed_job - need some error handling
-    error_rows = @tweets_importer.load
-
+    error_rows = @tweets_importer.load || []
+    puts error_rows.inspect
     flash[:success] = "Tweets Successfully Imported" if error_rows.count <= 0
     flash[:alert] = "Errors loading rows: #{format_errors(error_rows)}" if error_rows.count > 0
 

@@ -1,13 +1,14 @@
 <% content_for :tweets_index_title do %>
-    Sent
+SENT
 <% end %>
 
 <% content_for :tweets_index_header do %>
-    <th>id</th>
-    <th>Tweet</th>
-    <th>Sent</th>    
-    <th>Status</th>
-    <th>Attempts</th>
+    <th><%= table_header_link("id", method(:sent_path), "id") %>
+    <th><%= table_header_link("Tweet", method(:sent_path), "content") %></th>
+    <th><%= table_header_link("Sent", method(:sent_path), "sent_at") %></th>
+    <th><%= table_header_link("Status", method(:sent_path), "status") %></th>
+    <th><%= table_header_link("Attempts", method(:sent_path), "attempts")%></th>
+    <th></th>
 <% end %>
 
 <% content_for :tweets_index_body do %>
@@ -18,6 +19,9 @@
             <td> <%= t.sent_at_time %> </td>
             <td> <%= t.status %> </td>
             <td> <%= t.attempts %> </td>
+            <td>
+                <%= render :partial => "controls", locals: {t:t } %>
+            </td>
         </tr>
     <% end %>
 <% end %>

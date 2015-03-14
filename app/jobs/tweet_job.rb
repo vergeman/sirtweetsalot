@@ -24,7 +24,12 @@ class TweetJob < ActiveJob::Base
   rescue_from(Exception) do |exception|
     log(exception.inspect)
     #self.arguments.first.inspect)
-  end  
+  end
+
+  #breaks error corrrectino on import
+  #rescue_from(ActiveRecord::NotFound) do |exception|
+  #  Delayed::Job.find(self).destroy
+  #end
 
 
   private

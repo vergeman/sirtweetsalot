@@ -4,7 +4,7 @@
 #there can be sent tweets that are 'finished', won't be requeued
 #Handled api erros
 # RateLimit / TooManyRequests
-# Duplicate
+# Duplicate ---> not actually finished, just very long delay
 # ?
 
 class Tweet < ActiveRecord::Base
@@ -15,8 +15,8 @@ class Tweet < ActiveRecord::Base
   SENT_STATES = ["FAILED", "DUPLICATE", "SENT"]
   SENDING_STATES = ["QUEUED", "DELAYED"]
 
-  scope :sent, -> { where.not(status: SENDING_STATES) }
-  scope :sendable, -> { where.not(status: SENT_STATES) }
+  scope :sent, ->(var_order) { where.not(status: SENDING_STATES).order('?', var_order)  }
+  scope :sendable, ->(var_order) { where.not(status: SENT_STATES).order('?', var_order) }
 
   #accessors views
   def scheduled_for_time
@@ -39,7 +39,11 @@ class Tweet < ActiveRecord::Base
     self.update_attributes(status: "QUEUED",
                            rescheduled_at: nil,
                            tweet_id: nil,
-                           sent_at: nil)
+                           sent_at: nil,
+                           tweet_id: nil)
+
+    TweetJob.set(queue: self.user_id,
+                 wait_until: self.scheduled_for).perform_later(self)
   end
 
   #Async Task (DJ)

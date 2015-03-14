@@ -9,7 +9,11 @@ Rails.application.routes.draw do
   end
 
   resources :users, only: [:show, :edit, :update], as: 'account'
-  resources :tweets
+  resources :tweets, except: [:show] do
+    collection do 
+      delete 'destroy_multiple'
+    end
+  end
   resources :tweets_importers, only: [:new, :create], path: "importer"
   
   get "/launch/:id" => "tweets#launch"

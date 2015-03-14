@@ -1,7 +1,13 @@
+<% content_for :header do %>
+    <h3>IMPORT</h3>
+<% end %>
+
+<%= render partial: "/layouts/flash" %>
+
 <div class="col-md-4">
     <%= form_for @tweets_importer, url: tweets_importers_path do |f| %>
         <fieldset>
-            <legend>Import</legend>
+            <legend>Upload</legend>
             <div class="form-group">
                 <%= f.label "File", for: "file" %>
                 <div class="input-group">

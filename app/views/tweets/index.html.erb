@@ -1,11 +1,13 @@
 <%= render partial: "show_queue" if current_page?(queue_path)%>
 <%= render partial: "show_sent" if current_page?(sent_path)%>
 
-<h2>
-    <%= yield :tweets_index_title %>
-</h2>
+<%= content_for :header do %>
+    <h3>
+        <%= yield :tweets_index_title %>
+    </h3>
+<% end %>
 
-<hr>
+<%= render partial: "/layouts/flash" %>
 
 <div class="table-responsive">
     <table class="table table-striped">

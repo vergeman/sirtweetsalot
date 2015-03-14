@@ -1,3 +1,9 @@
+<% content_for :header do %>
+    <h3>SETTINGS</h3>
+<% end %>
+
+<%= render partial: "/layouts/flash" %>
+
 <div class="col-md-4">
 
     <%= form_for current_user, url: account_path do |f| %>
@@ -10,7 +16,7 @@
 
                 <div class="input-group">
                     <div class="input-group-addon">
-                        <i class="glyphicon glyphicon-time"></i>
+                        <i class="glyphicon glyphicon-envelope"></i>
                     </div>
                     <%= f.text_field :email, class: "form-control", value: current_user.email %>
                 </div>
@@ -22,7 +28,7 @@
 
                 <div class="input-group">
                     <div class="input-group-addon">
-                        <i class="glyphicon glyphicon-envelope"></i>
+                        <i class="glyphicon glyphicon-time"></i>
                     </div>
                     <%= f.time_zone_select :timezone, ActiveSupport::TimeZone.us_zones, {default: current_user.timezone, include_blank: true }, {:class => "form-control"}  %>
                 </div>
