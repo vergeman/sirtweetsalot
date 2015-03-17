@@ -1,0 +1,70 @@
+/*dashboard*/
+.box {
+    @extend .col-md-2, .col-sm-6;
+    @extend .col-md-offset-1;
+    font-size: 28px;
+    text-align:center;
+    margin-top: 25px;
+    &:first-child { margin-left: 0px; }
+}
+
+@media (max-width: 768px) {
+    .box { margin-left: 0px;}
+}
+
+
+.data {
+    height: 70px;
+    font-size: 100%;
+    color: #000;
+}
+
+.caption {
+    font-size: 14px;
+    color: #a6a6a6;
+    //text-decoration: underline;
+}
+
+/*quick queue*/
+.queue-data, .tweetometer-data { margin-top: 25px; }
+
+
+/*specificis*/
+.data > .queue-size-number {
+    font-size: 52px;
+}
+.next-tweet-time { padding-top: 2px; }
+.next-tweet-date { font-size: 50%; }
+
+
+/*chart*/
+.chart-wrap {
+    @extend .col-md-5;
+    @extend .col-md-offset-1;
+    height: 200px;
+}
+@media (max-width: 768px) {
+    .chart-wrap { margin-top: 50px; }
+}
+
+
+/*tweetometer*/
+.full-chart-wrap {
+    @extend .col-md-12;
+    margin-top: 50px;
+    height: 300px;
+}
+.value  { font-size: 48px; }
+
+
+/*datepicker*/
+
+.daterange .input-group-addon.submit-button {
+    padding: 3px;
+    border-right: 1px solid #ccc;
+}
+.datepicker table tr th { 
+    font-weight: normal;
+    color: #000;
+}
+.datepicker thead tr:first-child th { color: #000; }

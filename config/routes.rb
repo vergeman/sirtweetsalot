@@ -16,7 +16,6 @@ Rails.application.routes.draw do
   end
   resources :tweets_importers, only: [:new, :create], path: "importer"
   
-  get "/launch/:id" => "tweets#launch"
   get "/queue" => "tweets#queue"
   get "/sent" => "tweets#sent"
 

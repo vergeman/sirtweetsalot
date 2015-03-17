@@ -1,0 +1,62 @@
+<h5>SCHEDULED TWEETS</h5>
+
+<div class="daterange">
+  <form action="/tweets">
+
+    <input type="hidden" name="tstart" value=<%= @tstart %> />
+    <input type="hidden" name="tend" value=<%= @tend %> />
+
+    <div class="input-daterange input-group" id="datepicker-queue">
+      <input type="text" class="input-sm form-control" name="qstart" value= <%= @qstart.strftime("%m/%d/%Y") %> />
+      <span class="input-group-addon">to</span>
+      <input type="text" class="input-sm form-control" name="qend" value=<%= @qend.strftime("%m/%d/%Y") %> />
+      <span class="input-group-addon submit-button">
+        <button type="submit" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-refresh"></span>
+        </button>
+      </span>
+  </form>
+  </div>
+</div>
+
+<div class="queue-data row">
+
+  <!-- Box Date -->
+  <div class="next-tweet box">
+
+    <div class="data">
+      <div class="next-tweet-time">
+        <%= format_time(@next_tweet_time) %>
+      </div>
+
+      <div class="next-tweet-date">
+        <%= next_tweet_date(@next_tweet_time) %>
+      </div>
+     </div>
+
+     <div class="caption">
+       <div class="next-tweet-label">
+         NEXT TWEET
+       </div>
+     </div>
+
+   </div>
+
+ <!-- Num Queue Box -->
+   <div class="queue-size box">
+     <div class="data">
+       <div class="queue-size-number">
+         <%= current_user.tweets.num_queued(@qstart, @qend) %>
+       </div>
+     </div>
+
+     <div class="caption">
+         QUEUE SIZE
+     </div>
+   </div>
+
+   <!-- Graph -->
+   <div class="chart-wrap">
+     <div id="queued-chart"></div>
+   </div>
+
+</div>

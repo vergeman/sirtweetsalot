@@ -54,4 +54,5 @@ group :development, :test do
   gem 'american_date'
   gem 'delayed_job_active_record'
   gem 'daemons'
+  gem 'bootstrap-datepicker-rails'
 end

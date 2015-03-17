@@ -10,13 +10,35 @@
 class Tweet < ActiveRecord::Base
   class RateLimited < StandardError; end
 
-  belongs_to :user
+  belongs_to :user, inverse_of: :tweets
 
   SENT_STATES = ["FAILED", "DUPLICATE", "SENT"]
   SENDING_STATES = ["QUEUED", "DELAYED"]
 
   scope :sent, ->(var_order) { where.not(status: SENDING_STATES).order('?', var_order)  }
   scope :sendable, ->(var_order) { where.not(status: SENT_STATES).order('?', var_order) }
+  scope :num_queued, -> (from = Time.now.utc, to = (Time.now.utc + 7.days)) { where(status: SENDING_STATES).select{|t| t.schedule.between?(from, to)}.count }
+
+#QUICK QUEUE
+  scope :next_scheduled, -> (since = Time.now.utc) { where(status: SENDING_STATES).min_by{|t| since <=> t.schedule} }
+
+#TWEETOMETER
+  scope :percentage_since, -> (status, start_date, end_date) {
+    (num_status_since(status, start_date, end_date).to_f / num_all_normalized(status, start_date, end_date) * 100)
+  }
+
+  #fix for :percentage_since div by 0
+  scope :num_all_normalized, -> (status, start_date, end_date) {
+    num_status_since(SENT_STATES + SENDING_STATES, start_date, end_date) == 0 ? 1.to_f : num_status_since(SENT_STATES + SENDING_STATES, start_date, end_date) 
+  }
+
+  scope :status_since, -> (status, start_date, end_date) { where(status: status).select{|t| t.schedule.between?(start_date, end_date) } }
+
+  scope :num_status_since, -> (status, start_date, end_date) { status_since(status, start_date, end_date).count }
+
+  def schedule
+    self.rescheduled_at.nil? ? self.scheduled_for : self.rescheduled_at
+  end
 
   #accessors views
   def scheduled_for_time
@@ -28,17 +50,17 @@ class Tweet < ActiveRecord::Base
   end
 
   #conversion input str -> utc
-  def time_to_utc
+  def scheduled_for_time_to_utc
     self.scheduled_for = ActiveSupport::TimeZone
       .new(self.user.timezone)
       .local_to_utc(self.scheduled_for)
   end
 
+
   #if task status goes awry, we reset to pristine condition
   def reset
     self.update_attributes(status: "QUEUED",
                            rescheduled_at: nil,
-                           tweet_id: nil,
                            sent_at: nil,
                            tweet_id: nil)
 

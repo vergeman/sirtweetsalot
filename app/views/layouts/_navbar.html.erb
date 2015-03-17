@@ -9,7 +9,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      
+
       <%= link_to root_path, class: "navbar-brand" do %>
           <%= image_tag("logo.png") %>
           <h3 class="navbar-title">TWEEPEAT</h3>
@@ -42,7 +42,7 @@
               <% end %>
           </li>
 
-          <li>
+          <li class= "<%= is_active?(sent_path) %>">
               <%= link_to sent_path do %>
                   <div class="glyphicon glyphicon-sunglasses" aria-hidden="true"></div>
                   <div class="nav-text">SENT</div>
@@ -50,10 +50,10 @@
           </li>
       </ul>
 
-      <!-- mobile -->      
+      <!-- mobile -->
       <ul class="nav navbar-nav navbar-right navbar-mobile">
           <li><%= link_to "Settings", edit_account_path(current_user) %></li>
-          <li><%= link_to "Logout", destroy_user_session_path %></li>          
+          <li><%= link_to "Logout", destroy_user_session_path %></li>
       </ul>
 
       <!-- desktop -->
@@ -61,13 +61,13 @@
           <li>
               <% if current_user %>
                   <div class="dropdown">
-                      <button id="dLabel" type="button" class="navbar-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-image: url('<%= current_user.image_url %>');">                          
+                      <button id="dLabel" type="button" class="navbar-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-image: url('<%= current_user.image_url %>');">
                       </button>
 
                       <ul class="dropdown-menu" aria-labelledby="dLabel" role="menu">
                           <li><%= link_to "Settings", edit_account_path(current_user) %></li>
                           <li><%= link_to "Logout", destroy_user_session_path %></li>
-                      </ul>          
+                      </ul>
                   </div>
               <% end %>
 

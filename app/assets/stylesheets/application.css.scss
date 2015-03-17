@@ -14,8 +14,12 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
+@import "datepicker";
+
 @import "base";
 @import url(http://fonts.googleapis.com/css?family=Roboto|Open+Sans);
+
+@import "dashboard";
 
 body {
     font-family: 'Roboto', sans-serif;

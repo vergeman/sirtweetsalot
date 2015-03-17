@@ -4,10 +4,10 @@ QUEUE
 
 <% content_for :tweets_index_header do %>
     <th><%= table_header_link("id", method(:queue_path), "id") %>
-    <th><%= table_header_link("Tweet", method(:queue_path), "content") %></th>
-    <th><%= table_header_link("Scheduled", method(:queue_path), "scheduled_for") %></th>
-    <th><%= table_header_link("Status", method(:queue_path), "status") %></th>
-    <th><%= table_header_link("Attempts", method(:queue_path), "attempts")%></th>
+    <th><%= table_header_link("TWEET", method(:queue_path), "content") %></th>
+    <th><%= table_header_link("SCHEDULED", method(:queue_path), "scheduled_for") %></th>
+    <th><%= table_header_link("STATUS", method(:queue_path), "status") %></th>
+    <th><%= table_header_link("ATTEMPTS", method(:queue_path), "attempts")%></th>
     <th></th>
 <% end %>
 

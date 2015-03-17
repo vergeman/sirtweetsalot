@@ -38,7 +38,7 @@ class TweetsImporter
 
       tweet = Tweet.new(user_id: current_user.id)
       tweet.attributes = row.to_hash.slice(*Tweet.attribute_names)
-      tweet.time_to_utc
+      tweet.scheduled_for_time_to_utc
       tweet
 
     end

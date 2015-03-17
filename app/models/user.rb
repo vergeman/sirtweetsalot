@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   devise :rememberable, :trackable
   devise :omniauthable, :omniauth_providers => [:twitter]
 
-  has_many :tweets #, dependent: :destroy
+  has_many :tweets, inverse_of: :user #, dependent: :destroy
 
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
@@ -39,6 +39,17 @@ class User < ActiveRecord::Base
     end
 
     client
+  end
+
+  def next_scheduled_tweet_time(since)
+    self.tweets.next_scheduled(since).blank? ? nil :
+      self.tweets.next_scheduled(since)
+      .schedule
+      .in_time_zone(self.timezone)
+  end
+
+  def next_scheduled_tweet(since)
+    self.tweets.next_scheduled(since)
   end
 end
 

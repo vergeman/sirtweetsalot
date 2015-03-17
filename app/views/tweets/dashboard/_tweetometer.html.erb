@@ -1,0 +1,72 @@
+<h5>TWEETOMETER</h5>
+<div class="daterange">
+  <form action="/tweets">
+
+    <input type="hidden" name="qstart" value=<%= @qstart %> />
+    <input type="hidden" name="qend" value=<%= @qend %> />
+
+    <div class="input-daterange input-group" id="datepicker-tweetometer">
+      <input type="text" class="input-sm form-control" name="tstart" value=<%= @tstart.strftime("%m/%d/%Y") %> />
+      <span class="input-group-addon">to</span>
+      <input type="text" class="input-sm form-control" name="tend" value=<%= @tend.strftime("%m/%d/%Y") %> />
+      <span class="input-group-addon submit-button">
+        <button type="submit" class="btn btn-default btn-xs">
+          <span class="glyphicon glyphicon-refresh"></span>
+        </button>
+      </span>
+  </form>
+  </div>
+</div>
+
+<!-- box of stats -->
+<div class="tweetometer-data row">
+
+  <div class="success-percentage box">
+    <div class="data">
+      <div class="success-percentage value">
+        <%= "#{current_user.tweets
+             .percentage_since("SENT", @tstart, @tend).to_i}%" %>
+      </div>
+    </div>
+
+    <div class="caption">
+      SUCCESS RATE
+    </div>
+  </div>
+
+
+
+  <div class="success-count box">
+    <div class="success-count value">
+      <%= current_user.tweets.num_status_since("SENT", @tstart, @tend) %>
+    </div>
+    <div class="caption">
+      DELIVERED
+    </div>
+  </div>
+
+
+  <div class="fail-count box">
+    <div class="fail-count value">
+      <%= current_user.tweets.num_status_since("FAILED", @tstart, @tend) %>
+    </div>
+    <div class="caption">
+      FAILED
+    </div>
+  </div>
+
+
+  <div class="delayed-count box">
+    <div class="delayed-count value">
+      <%= current_user.tweets.num_status_since("DELAYED", @tstart, @tend) %>
+    </div>
+    <div class="caption">
+      DELAYED
+    </div>
+  </div>
+
+</div>
+
+<div class="full-chart-wrap">
+  <div id="tweetometer-chart"></div>
+</div>

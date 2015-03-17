@@ -1,5 +1,6 @@
 class TweetsController < ApplicationController
   before_filter :authenticate_user!, :verify_settings
+
   #before_filter :editable?, only: [:edit, :update]
 
 #aux routes
@@ -15,7 +16,7 @@ class TweetsController < ApplicationController
 
 #dashboard
   def index
-    @tweets = Tweet.all
+    load_dashboard
     render :dashboard
   end
 
@@ -56,6 +57,30 @@ class TweetsController < ApplicationController
   end
 
   private
+
+  def load_dashboard
+    #defaults
+
+    @tstart = valid_date(params[:tstart]) || DateTime.now.utc
+    @tend = valid_date(params[:tend]) || DateTime.now.utc + 7.days
+
+    @qstart = valid_date(params[:qstart]) || DateTime.now.utc
+    @qend = valid_date(params[:qend]) || DateTime.now.utc + 7.days
+
+    @next_tweet = current_user.next_scheduled_tweet(@qstart)
+    @next_tweet_time = current_user.next_scheduled_tweet_time(@qstart)
+
+  end
+
+  def valid_date(p)
+    begin
+      #make sure to convert date params to UTC
+      return DateTime.parse(Time.parse(p).utc.to_s)
+    rescue
+      return false
+    end
+  end
+
   def update_params
     params.require(:tweet).except!(:reset).permit!
   end
