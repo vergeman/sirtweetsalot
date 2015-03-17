@@ -2,8 +2,8 @@
 <html>
 
     <head>
-        <title>CSVTweet</title>
-        <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+        <title>TWEEPEAT</title>
+        <%= stylesheet_link_tag    'application', media: 'all'%>
         <%= yield :head %>
         <%= csrf_meta_tags %>
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -13,7 +13,7 @@
          <![endif]-->
     </head>
 
-    <body>
+    <body class="app">
 
         <%= render partial: "/layouts/navbar" unless current_user.nil? %>
 
@@ -34,7 +34,6 @@
 
     </body>
 
+    <%= javascript_include_tag 'application' %>
     <%= yield :js %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-
 </html>

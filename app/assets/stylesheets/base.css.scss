@@ -3,7 +3,7 @@
  */
 
 /* Move down content because we have a fixed navbar that is 50px tall */
-body {
+body.app {
     padding-top: 100px;
 }
 
@@ -20,8 +20,9 @@ body {
 .navbar-default {
     background-color: #fff;
     border-bottom: 1px solid #e7e7e7;
-    padding-bottom: 12px;
+    padding-bottom: 20px;
 }
+.nav.navbar-nav {background: white;}
 
 .navbar li { 
     margin-left: 20px;
@@ -72,7 +73,6 @@ ul.dropdown-menu {
 
 .main {
     padding: 0px 40px;
-    margin-top: -10px;
     @media (max-width: 768px) { margin-top: 0px; }
 }
 
@@ -91,14 +91,27 @@ th > a {
     &:hover { text-decoration:none !important; }
 }
 
+th .caret {
+    font-weight: normal;
+    margin-right: 8px;
+}
 
+.table tr td { padding-top: 10px !important; }main
+.table tr td:last-child { padding-top: 5px !important; }
+
+.table > thead > tr > th { border-bottom: 1px solid #ddd; }
+td:last-child { text-align:right; }
+
+.status-good { color: #5cb85c; }
+.status-poor { color: #f0ad4e; }
+.status-fail { color: #d9534f; }
 
 /* header */
 .subheader {
     margin-bottom: 20px;
     padding-bottom: 10px;
     padding-left: 40px;
-
+    padding-top: 10px;
     background: #efefef;
     border-top:  1px solid darken(#efefef, 10%);
     border-bottom: 1px solid darken(#efefef, 10%);

@@ -25,4 +25,18 @@ module TweetHelper
     }.join(',')
   end
 
+
+
+  #status color
+  def status_class(status)
+    case status
+    when "SENT", "QUEUED"
+      "status-good"
+    when "DELAYED"
+      "status-poor"
+    else
+      "status-fail"
+    end
+  end
+
 end

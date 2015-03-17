@@ -3,40 +3,67 @@
 <% end %>
 
 <%= render partial: "/layouts/flash" %>
+<div class="row">
+    <div class="col-md-1"></div>
 
-<div class="col-md-4">
+    <div class="col-md-4">
 
-    <%= form_for current_user, url: account_path do |f| %>
-        <fieldset>
-            <legend>User</legend>
+        <%= form_for current_user, url: account_path do |f| %>
+            <fieldset>
+                <legend>User</legend>
 
 
-            <div class="form-group">
-                <%= f.label "Email", for: "email" %>
+                <div class="form-group">
+                    <%= f.label "Email", for: "email" %>
 
-                <div class="input-group">
-                    <div class="input-group-addon">
-                        <i class="glyphicon glyphicon-envelope"></i>
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="glyphicon glyphicon-envelope"></i>
+                        </div>
+                        <%= f.text_field :email, class: "form-control", value: current_user.email %>
                     </div>
-                    <%= f.text_field :email, class: "form-control", value: current_user.email %>
+
                 </div>
 
-            </div>
+                <div class="form-group">
+                    <%= f.label "Timezone (required)", for: "timezone" %>
 
-            <div class="form-group">
-                <%= f.label "Timezone (required)", for: "timezone" %>
-
-                <div class="input-group">
-                    <div class="input-group-addon">
-                        <i class="glyphicon glyphicon-time"></i>
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="glyphicon glyphicon-time"></i>
+                        </div>
+                        <%= f.time_zone_select :timezone, ActiveSupport::TimeZone.us_zones, {default: current_user.timezone, include_blank: true }, {:class => "form-control"}  %>
                     </div>
-                    <%= f.time_zone_select :timezone, ActiveSupport::TimeZone.us_zones, {default: current_user.timezone, include_blank: true }, {:class => "form-control"}  %>
+
                 </div>
+                <button type="submit" class="btn btn-default">Update</button>
 
-            </div>
-            <button type="submit" class="btn btn-default">Save</button>
+            </fieldset>
+        <% end %>
 
-        </fieldset>
-    <% end %>
+    </div>
 
+    <div class="col-md-1"></div>
+
+    <div class="sidepane col-md-5">
+
+        <section class="info-section">
+            <h4>INFO</h4>
+            <p>TWEEPEAT is a random side-project to ease the bulk scheduling and sending of tweets.</p>
+
+            <p>Rails, Active Job (Delayed Job), OAuth + Twitter API.
+            </p>
+
+            <p> <%= link_to "Source", "http://www.github.com/vergeman/tweepeat" %> </p>
+        </section>
+
+        <section class="info-section">
+            <h4>LIMITS</h4>
+            <p> Twitter is sensitve to spam, and will easily flag duplicate tweets - even when not sent consequentively. A significant amount of time is needed (10-15+ hours) for repeated tweets to pass.
+            </p>
+            <p> Twitter isn't explicit about status update rate limitations, but best to err on the side of caution, and space out your scheduling.</p>
+        </section>
+
+
+    </div>
 </div>

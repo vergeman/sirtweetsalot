@@ -1,0 +1,28 @@
+/*side pane in import and settings */
+
+.sidepane {
+    background: #f1f1f1;
+    border: 1px solid #d1d1d1;
+    border-radius: 3px;
+}
+
+@media (max-width:768px) {
+    .sidepane {
+        margin-top: 40px;
+    }
+}
+
+
+.instruction-section, .info-section {
+
+    padding-bottom: 20px;
+
+    table {
+        background: white;
+        tr td { text-align:left; }
+        .center-cell { text-align: center; }
+    }
+}
+
+
+.border { background-color: #ddd; }

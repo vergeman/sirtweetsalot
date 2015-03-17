@@ -28,4 +28,14 @@ module ApplicationHelper
     link_to category, link_route.call(order: "#{attribute}_#{sort_order}")
   end
 
+  def generate_caret(sort_order)
+    if sort_order.include?("asc")
+      content_tag(:span, "", class: "caret")
+    else
+      content_tag(:span, class: "dropup") do
+        content_tag(:span, "", class: "caret")
+      end
+    end
+  end
+
 end

@@ -19,75 +19,79 @@ function get_ticks(ary, ticks) {
     return list;
 }
 
-
-var queued_chart = c3.generate({    
-    bindto: '#queued-chart',
-    data: {
-        x: 'x',
-        columns: [
-            queue_data_x,
-            queue_data_y
-        ]
-    },
-    axis: {
-        x: {
-            type: 'timeseries',
-            tick: {
-                format: '%m-%d',
-                fit: true
+function build_queued_chart() {
+    var queued_chart = c3.generate({
+        bindto: '#queued-chart',
+        data: {
+            x: 'x',
+            columns: [
+                queue_data_x,
+                queue_data_y
+            ]
+        },
+        axis: {
+            x: {
+                type: 'timeseries',
+                tick: {
+                    format: '%m-%d',
+                    fit: true
+                }
+            },
+            y: {
+                min: 0,
+                tick: {
+                    values: get_ticks(queue_data_y.slice(1, queue_data_y.length), 4),
+                    format: function (d) { return d; }
+                },
+                padding: {top: 10, bottom: 0},
+                show: true
             }
         },
-        y: {
-            min: 0,
-            tick: {
-                values: get_ticks(queue_data_y.slice(1, queue_data_y.length), 4),
-                format: function (d) { return d; }
-            },
-            padding: {top: 10, bottom: 0},
-            show: true
+        padding: { right: 20 },
+        tooltip: { show: false},
+        size: {
+            height: 200,
         }
-    },
-    padding: { right: 20 },
-    tooltip: { show: false},
-    size: { 
-        height: 200,
-    }
-});
+    });
+
+    return queued_chart;
+}
 
 
 
-
-
-var tweetometer_chart = c3.generate({    
-    bindto: '#tweetometer-chart',
-    data: {
-        x: 'x',
-        columns: [
-            tweetometer_data_x,
-            tweetometer_data_y
-        ],
-        colors : {'TWEETS' : '#f39c12'}
-    },
-    axis: {
-        x: {
-            type: 'timeseries',
-            tick: {
-                format: '%m-%d',
-                fit: true
-            }
+function build_tweetometer_chart() {
+    var tweetometer_chart = c3.generate({
+        bindto: '#tweetometer-chart',
+        data: {
+            x: 'x',
+            columns: [
+                tweetometer_data_x,
+                tweetometer_data_y
+            ],
+            colors : {'TWEETS' : '#f39c12'}
         },
-        y: {
-            min: 0,
-            tick: {
-                values: get_ticks(tweetometer_data_y.slice(1, tweetometer_data_y.length), 4),
-                format: function (d) { return d; }
+        axis: {
+            x: {
+                type: 'timeseries',
+                tick: {
+                    format: '%m-%d',
+                    fit: true
+                }
             },
-            padding: {top: 10, bottom: 0},
-            show: true
-        }
+            y: {
+                min: 0,
+                tick: {
+                    values: get_ticks(tweetometer_data_y.slice(1, tweetometer_data_y.length), 4),
+                    format: function (d) { return d; }
+                },
+                padding: {top: 10, bottom: 0},
+                show: true
+            }
 
-     },
-    tooltip: { show: false},
-    size: { height: 300 }
-});
+        },
+        tooltip: { show: false},
+        size: { height: 300 }
+    });
 
+    return tweetometer_chart;
+}

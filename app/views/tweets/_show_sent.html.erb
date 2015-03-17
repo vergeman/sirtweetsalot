@@ -3,7 +3,6 @@ SENT
 <% end %>
 
 <% content_for :tweets_index_header do %>
-    <th><%= table_header_link("id", method(:sent_path), "id") %>
     <th><%= table_header_link("TWEET", method(:sent_path), "content") %></th>
     <th><%= table_header_link("SENT", method(:sent_path), "sent_at") %></th>
     <th><%= table_header_link("STATUS", method(:sent_path), "status") %></th>
@@ -14,10 +13,9 @@ SENT
 <% content_for :tweets_index_body do %>
     <% @tweets.each_with_index do |t, i| %>
         <tr>
-            <td> <%= t.id %> </td>
             <td> <%= t.content %></td>
             <td> <%= t.sent_at_time %> </td>
-            <td> <%= t.status %> </td>
+            <td class="<%= status_class(t.status) %>" > <%= t.status %> </td>
             <td> <%= t.attempts %> </td>
             <td>
                 <%= render :partial => "controls", locals: {t:t } %>

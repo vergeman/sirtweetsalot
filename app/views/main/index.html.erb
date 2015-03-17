@@ -1,8 +1,12 @@
-<%= render partial: "/layouts/flash" %>
+<div class="row">
+  <%= render partial: "jumbotron" %>
+</div>
 
-<% content_for :header do %>
-    <h1> Splash CSVTwitter </h1>
-<% end %>
-
-
-<%= link_to "Sign in with Twitter", user_omniauth_authorize_path(:twitter) %>
+<div class="row">
+  <div class="col-md-2"></div>
+  <div class="col-md-8">
+    <%= render partial: "/layouts/flash" %>
+    <%= render partial: "marketing" %>
+  </div>
+  <div class="col-md-2"></div>
+</div>

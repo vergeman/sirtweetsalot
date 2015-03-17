@@ -11,13 +11,21 @@ class TweetsImportersController < ApplicationController
   def create
     @tweets_importer = TweetsImporter.new(upload_params)
 
-    #prob be delayed_job - need some error handling
-    error_rows = @tweets_importer.load || []
-    puts error_rows.inspect
-    flash[:success] = "Tweets Successfully Imported" if error_rows.count <= 0
-    flash[:alert] = "Errors loading rows: #{format_errors(error_rows)}" if error_rows.count > 0
+    begin
+      error_rows = @tweets_importer.load || []
 
-    redirect_to queue_path
+      flash[:success] = "Tweets Successfully Imported" if error_rows.count <= 0
+      flash[:alert] = "Errors loading rows: #{format_errors(error_rows)}" if error_rows.count > 0
+
+      redirect_to queue_path
+
+    rescue => e
+
+      flash[:error] = "We've encountered an error: #{e.message}"
+
+      redirect_to new_tweets_importer_path
+    end
+
   end
 
 

@@ -3,8 +3,9 @@ class MainController < ApplicationController
 
   #landing page
   def index
+    render :index, layout: "splash"
   end
-
+ 
 
   private
   def check_authenticated_user
