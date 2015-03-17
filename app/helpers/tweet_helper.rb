@@ -9,4 +9,20 @@ module TweetHelper
     tweet_time.today? ? "Today" : tweet_time.strftime("%b %d")
   end
 
+# dashboard graphs helpers to build js x/y values
+  def build_dates(sdate, edate)
+    (sdate.utc.to_i..edate.utc.to_i)
+      .step(1.day)
+      .map{ |d| Time.at(d).strftime("%Y-%m-%d") }.join('", "').html_safe
+  end
+
+  def build_data(states, sdate, edate)
+    (sdate.utc.to_i..edate.utc.to_i)
+      .step(1.day)
+      .map{ |d|
+
+      current_user.tweets.num_status_since(states, Time.at(d), Time.at(d) + 1.day)
+    }.join(',')
+  end
+
 end

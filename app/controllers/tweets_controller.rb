@@ -61,11 +61,11 @@ class TweetsController < ApplicationController
   def load_dashboard
     #defaults
 
-    @tstart = valid_date(params[:tstart]) || DateTime.now.utc
-    @tend = valid_date(params[:tend]) || DateTime.now.utc + 7.days
+    @qstart = valid_date(params[:qstart]) || DateTime.now.in_time_zone(current_user.timezone)
+    @qend = valid_date(params[:qend]) || DateTime.now.in_time_zone(current_user.timezone) + 7.days
 
-    @qstart = valid_date(params[:qstart]) || DateTime.now.utc
-    @qend = valid_date(params[:qend]) || DateTime.now.utc + 7.days
+    @tstart = valid_date(params[:tstart]) || DateTime.now.in_time_zone(current_user.timezone) - 7.days
+    @tend = valid_date(params[:tend]) || DateTime.now.in_time_zone(current_user.timezone)
 
     @next_tweet = current_user.next_scheduled_tweet(@qstart)
     @next_tweet_time = current_user.next_scheduled_tweet_time(@qstart)
@@ -96,7 +96,7 @@ class TweetsController < ApplicationController
     valid_sort_order = p_key_val.keys.any? { |k| ["asc", "desc"].include?(k.reverse) }
     valid_attribute = Tweet.new.attributes.keys.any? { |k| k.include?(k) }
 
-    if  valid_sort_order && valid_attribute
+    if valid_sort_order && valid_attribute
       params[:order].to_s.reverse.sub('_', ' ').reverse
     end
   end

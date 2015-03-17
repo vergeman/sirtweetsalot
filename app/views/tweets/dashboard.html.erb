@@ -7,13 +7,10 @@
     <%=  javascript_include_tag "//cdnjs.cloudflare.com/ajax/libs/c3/0.4.9/c3.min.js" %>
 
     <script type="text/javascript">
-
-
-     var queue_data_x = ['x', '2013-01-01', '2013-01-02', '2013-01-03', '2013-01-04', '2013-01-05', '2013-01-06']
-     var queue_data_y = ['QUEUE', 30, 200, 100, 400, 150, 250]
-
-     var tweetometer_data_x = ['x', '2013-01-01', '2013-01-02', '2013-01-03', '2013-01-04', '2013-01-05', '2013-01-06']
-     var tweetometer_data_y = ['TWEETS', 30, 200, 100, 400, 150, 250]
+     var queue_data_x = ['x', "<%= build_dates(@qstart, @qend) %>" ];
+     var queue_data_y = ['QUEUE', <%= build_data(Tweet::SENDING_STATES, @qstart, @qend) %> ];
+     var tweetometer_data_x =['x', "<%= build_dates(@tstart, @tend) %>" ];
+     var tweetometer_data_y = ['TWEETS', <%= build_data(Tweet::SENT_STATES, @tstart, @tend) %> ];
     </script>
 
 <% end %>
