@@ -2,7 +2,7 @@
 <html>
 
     <head>
-        <title>Tweepeat</title>
+        <title><%= title %></title>
         <%= stylesheet_link_tag    'application', media: 'all'%>
         <%= yield :head %>
         <%= csrf_meta_tags %>
@@ -20,7 +20,7 @@
             <%= yield %>
 
         </div>
-        
+
   </body>
 
   <%= javascript_include_tag 'application' %>

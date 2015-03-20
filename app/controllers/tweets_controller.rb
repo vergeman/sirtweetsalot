@@ -1,5 +1,5 @@
 class TweetsController < ApplicationController
-  before_filter :authenticate_user!, :verify_settings
+  before_filter :authenticate_user!, :verify_settings, :needs_reauth
 
   #before_filter :editable?, only: [:edit, :update]
 
@@ -27,7 +27,7 @@ class TweetsController < ApplicationController
 
   def update
     @tweet = current_user.tweets.find_by_id(params[:id])
-    @tweet.reset if reset_params
+    @tweet.reset && redirect_to(queue_path) and return if reset_params
 
     if @tweet.update_attributes(update_params)     
       redirect_to edit_tweet_path
@@ -59,23 +59,21 @@ class TweetsController < ApplicationController
   private
 
   def load_dashboard
-    #defaults
 
-    @qstart = valid_date(params[:qstart]) || DateTime.now.in_time_zone(current_user.timezone)
-    @qend = valid_date(params[:qend]) || DateTime.now.in_time_zone(current_user.timezone) + 7.days
+    @qstart = valid_date(params[:qstart], "beginning_of_day") || valid_date(Time.now.to_s, "beginning_of_day")
+    @qend = valid_date(params[:qend], "end_of_day") || valid_date( (Time.now + 7.days).to_s, "end_of_day")
 
-    @tstart = valid_date(params[:tstart]) || DateTime.now.in_time_zone(current_user.timezone) - 7.days
-    @tend = valid_date(params[:tend]) || DateTime.now.in_time_zone(current_user.timezone)
+    @tstart = valid_date(params[:tstart], "beginning_of_day") || valid_date( (Time.now - 7.days).to_s, "beginning_of_day")
+    @tend = valid_date(params[:tend], "end_of_day") || valid_date( Time.now.to_s, "end_of_day")
 
-    @next_tweet = current_user.next_scheduled_tweet(@qstart)
-    @next_tweet_time = current_user.next_scheduled_tweet_time(@qstart)
+    @next_tweet = current_user.next_scheduled_tweet(@qstart, @qend)
+    @next_tweet_time = current_user.next_scheduled_tweet_time(@qstart, @qend)
 
   end
 
-  def valid_date(p)
+  def valid_date(p, of_day)
     begin
-      #make sure to convert date params to UTC
-      return DateTime.parse(Time.parse(p).utc.to_s)
+      return DateTime.parse(Time.parse(p).send(of_day).to_s)
     rescue
       return false
     end
@@ -86,7 +84,7 @@ class TweetsController < ApplicationController
   end
 
   def reset_params
-    params[:tweet][:reset] == 1
+    params[:tweet][:reset] == 1.to_s
   end
 
   def order_params    

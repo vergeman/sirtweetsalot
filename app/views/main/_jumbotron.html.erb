@@ -1,11 +1,16 @@
 <div class="jumbotron col-md-12 col-sm-12">
+    <%= image_tag("logo.png") %>
+    <h2 class="title">SIR TWEETS-A-LOT</h2>
 
-    <h1>TWEE-PEAT</h1>
-
-    <p class="lead">BULK SCHEDULING AND DELIVERY OF TWEETS</p>
-    <p class="lead">IMPORT TWEETS FROM EXCEL OR CSV</p>
+    <br />
+    <p class="lead">BULK SCHEDULE AND SEND</p>
+    <p class="lead">IMPORT TWEETS AND TIMES FROM EXCEL OR CSV</p>
 
     <p>
-        <%= link_to "Sign in with Twitter", user_omniauth_authorize_path(:twitter), class: "btn btn-lg btn-success", role: "button"  %>
+        <%= link_to user_omniauth_authorize_path(:twitter), class: "btn btn-sm", role: "button"  do %>
+
+        <%= image_tag("sign-in-with-twitter-gray.png") %>
+
+        <% end %>
     </p>
 </div>

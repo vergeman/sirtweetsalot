@@ -13,7 +13,7 @@
      var queue_data_x = ['x', "<%= build_dates(@qstart, @qend) %>" ];
      var queue_data_y = ['QUEUE', <%= build_data(Tweet::SENDING_STATES, @qstart, @qend) %> ];
      var tweetometer_data_x =['x', "<%= build_dates(@tstart, @tend) %>" ];
-     var tweetometer_data_y = ['TWEETS', <%= build_data(Tweet::SENT_STATES, @tstart, @tend) %> ];
+     var tweetometer_data_y = ['TWEETS', <%= build_data(Tweet::SENT_STATES, @tstart, @tend, "sent_at") %> ];
 
      var queued_chart = build_queued_chart();
      var tweetometer_chart = build_tweetometer_chart();
@@ -28,6 +28,8 @@
 <% content_for :header do %>
     <h3>DASHBOARD</h3>
 <% end %>
+
+<%= render partial: "/layouts/flash" %>
 
 <!-- quick queue -->
 <%= render partial: "tweets/dashboard/quick_queue" %>

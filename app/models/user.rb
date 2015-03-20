@@ -1,3 +1,5 @@
+require 'aes'
+
 class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -7,16 +9,29 @@ class User < ActiveRecord::Base
   has_many :tweets, inverse_of: :user #, dependent: :destroy
 
   def self.from_omniauth(auth)
-    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
-      user.attributes = auth.info.to_hash.slice(*User.attribute_names)
 
+    #user = where(provider: auth.provider, uid: auth.uid).first    
+    user = where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+      user.attributes = auth.info.to_hash.slice(*User.attribute_names)
       user.image_url = auth.info.image
       user.password = Devise.friendly_token[0,20]
-      #TODO: encrypt 2-way w/ app secret
-      user.token = auth.credentials.token
-      user.secret = auth.credentials.secret
-
     end
+    puts user.inspect
+
+    self.update_credentials(user, auth)
+    puts user.inspect
+
+    return user
+  end
+
+  def self.key
+    Rails.application.secrets.secret_key_base
+  end
+
+  def self.update_credentials(user, auth)
+    user.update_attributes(token: AES.encrypt(auth.credentials.token, User.key),
+                           secret: AES.encrypt(auth.credentials.secret, User.key),
+                           reauth: false)
   end
 
   def self.new_with_session(params, session)
@@ -32,24 +47,25 @@ class User < ActiveRecord::Base
     client = Twitter::REST::Client.new do |config|
       config.consumer_key        = ENV['TWITTER_API_KEY']
       config.consumer_secret     = ENV['TWITTER_API_SECRET']
-      #config.access_token        = current_user.token
-      #config.access_token_secret = current_user.secret
-      config.access_token        = self.token
-      config.access_token_secret = self.secret      
+
+      config.access_token        = AES.decrypt(self.token, User.key)
+      config.access_token_secret = AES.decrypt(self.secret, User.key )
     end
 
     client
   end
 
-  def next_scheduled_tweet_time(since)
-    self.tweets.next_scheduled(since).blank? ? nil :
-      self.tweets.next_scheduled(since)
-      .schedule
-      .in_time_zone(self.timezone)
+
+#model based  
+  def next_scheduled_tweet_time(from, to)
+    tweet = self.tweets.scheduled_between(from, to).min_by(&:schedule)
+    tweet.nil? ? nil : tweet.schedule.in_time_zone(self.timezone)
   end
 
-  def next_scheduled_tweet(since)
-    self.tweets.next_scheduled(since)
+  def next_scheduled_tweet(from, to)
+    tweets.scheduled_between(from, to).min_by(&:schedule)
   end
+
+
 end
 

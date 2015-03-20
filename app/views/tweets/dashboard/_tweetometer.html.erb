@@ -38,30 +38,28 @@
 
   <div class="success-count box">
     <div class="success-count value">
-      <%= current_user.tweets.num_status_since("SENT", @tstart, @tend) %>
+      <%= current_user.tweets.num_status_since("SENT", @tstart, @tend, "sent_at") %>
     </div>
     <div class="caption">
       DELIVERED
     </div>
   </div>
 
-
-  <div class="fail-count box">
-    <div class="fail-count value">
-      <%= current_user.tweets.num_status_since("FAILED", @tstart, @tend) %>
+  <div class="duplicated-count box">
+    <div class="duplicated-count value">
+      <%= current_user.tweets.num_status_since("DUPLICATE", @tstart, @tend, "sent_at") %>
     </div>
     <div class="caption">
-      FAILED
+      DUPLICATE (REJECTED)
     </div>
   </div>
 
-
-  <div class="delayed-count box">
-    <div class="delayed-count value">
-      <%= current_user.tweets.num_status_since("DELAYED", @tstart, @tend) %>
+  <div class="fail-count box">
+    <div class="fail-count value">
+      <%= current_user.tweets.num_status_since("FAILED", @tstart, @tend, "sent_at") %>
     </div>
     <div class="caption">
-      DELAYED
+      FAILED
     </div>
   </div>
 

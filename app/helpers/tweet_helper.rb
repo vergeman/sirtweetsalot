@@ -11,17 +11,16 @@ module TweetHelper
 
 # dashboard graphs helpers to build js x/y values
   def build_dates(sdate, edate)
-    (sdate.utc.to_i..edate.utc.to_i)
+    (sdate.utc.to_i..edate.utc.end_of_day.to_i)
       .step(1.day)
       .map{ |d| Time.at(d).strftime("%Y-%m-%d") }.join('", "').html_safe
   end
 
-  def build_data(states, sdate, edate)
-    (sdate.utc.to_i..edate.utc.to_i)
+  def build_data(states, sdate, edate, attr="schedule")
+    (sdate.to_i..edate.end_of_day.to_i)
       .step(1.day)
       .map{ |d|
-
-      current_user.tweets.num_status_since(states, Time.at(d), Time.at(d) + 1.day)
+      current_user.tweets.num_status_since(states, Time.at(d).beginning_of_day, Time.at(d).end_of_day, attr)
     }.join(',')
   end
 

@@ -5,6 +5,7 @@ QUEUE
 <% content_for :tweets_index_header do %>
     <th><%= table_header_link("TWEET", method(:queue_path), "content") %></th>
     <th><%= table_header_link("SCHEDULED", method(:queue_path), "scheduled_for") %></th>
+    <th><%= table_header_link("RESCHEDULED", method(:queue_path), "rescheduled_at") %></th>
     <th><%= table_header_link("STATUS", method(:queue_path), "status") %></th>
     <th><%= table_header_link("ATTEMPTS", method(:queue_path), "attempts")%></th>
     <th></th>
@@ -16,6 +17,8 @@ QUEUE
         <tr>
             <td> <%= t.content%></td>
             <td> <%= t.scheduled_for_time %> </td>
+            <td> <%= t.rescheduled_at_time %> </td>
+
             <td class="<%= status_class(t.status) %>"> <%= t.status %> </td>
             <td> <%= t.attempts %> </td>
             <td> <%= render partial: "controls", locals: {t: t} %> </td>

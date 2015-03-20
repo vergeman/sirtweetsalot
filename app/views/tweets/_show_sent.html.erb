@@ -4,6 +4,7 @@ SENT
 
 <% content_for :tweets_index_header do %>
     <th><%= table_header_link("TWEET", method(:sent_path), "content") %></th>
+    <th><%= table_header_link("INIT SCHEDULED", method(:sent_path), "scheduled_for") %></th>
     <th><%= table_header_link("SENT", method(:sent_path), "sent_at") %></th>
     <th><%= table_header_link("STATUS", method(:sent_path), "status") %></th>
     <th><%= table_header_link("ATTEMPTS", method(:sent_path), "attempts")%></th>
@@ -14,6 +15,7 @@ SENT
     <% @tweets.each_with_index do |t, i| %>
         <tr>
             <td> <%= t.content %></td>
+            <td> <%= t.scheduled_for_time %> </td>
             <td> <%= t.sent_at_time %> </td>
             <td class="<%= status_class(t.status) %>" > <%= t.status %> </td>
             <td> <%= t.attempts %> </td>

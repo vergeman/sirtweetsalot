@@ -12,29 +12,36 @@ class Tweet < ActiveRecord::Base
 
   belongs_to :user, inverse_of: :tweets
 
-  SENT_STATES = ["FAILED", "DUPLICATE", "SENT"]
-  SENDING_STATES = ["QUEUED", "DELAYED"]
+  #rescheduled wait time
+  RATE_LIMIT_RESCHEDULE = 5.minutes
+  REAUTH_RESCHEDULE = 1.minutes
+  DUPLICATE_RESCHEDULE = 15.hours
+
+  SENT_STATES = ["FAILED", "SENT"]
+  SENDING_STATES = ["QUEUED", "DELAYED", "DUPLICATE", "UNAUTHORIZED"]
 
   scope :sent, ->(var_order) { where.not(status: SENDING_STATES).order('?', var_order)  }
   scope :sendable, ->(var_order) { where.not(status: SENT_STATES).order('?', var_order) }
-  scope :num_queued, -> (from = Time.now.utc, to = (Time.now.utc + 7.days)) { where(status: SENDING_STATES).select{|t| t.schedule.between?(from, to)}.count }
+  scope :num_queued, -> (from = Time.now.utc, to = (Time.now.utc + 7.days)) { scheduled_between(from, to).count }
 
 #QUICK QUEUE
-  scope :next_scheduled, -> (since = Time.now.utc) { where(status: SENDING_STATES).min_by{|t| since <=> t.schedule} }
+  #returns list of scheduled tweets in date range (or empty range)
+  scope :scheduled_between, -> (from = Time.now.utc, to = (Time.now.utc + 7.days)) { where(status: SENDING_STATES).select{ |t| t.schedule.between?(from, to)} }
 
 #TWEETOMETER
   scope :percentage_since, -> (status, start_date, end_date) {
-    (num_status_since(status, start_date, end_date).to_f / num_all_normalized(status, start_date, end_date) * 100)
+    (num_status_since(status, start_date, end_date, "sent_at").to_f / num_all_normalized(start_date, end_date) * 100)
   }
 
   #fix for :percentage_since div by 0
-  scope :num_all_normalized, -> (status, start_date, end_date) {
-    num_status_since(SENT_STATES + SENDING_STATES, start_date, end_date) == 0 ? 1.to_f : num_status_since(SENT_STATES + SENDING_STATES, start_date, end_date) 
+  scope :num_all_normalized, -> (start_date, end_date) {
+    num_status_since(SENT_STATES, start_date, end_date, "sent_at") == 0 ? 1.to_f : num_status_since(SENT_STATES, start_date, end_date, "sent_at") 
   }
 
-  scope :status_since, -> (status, start_date, end_date) { where(status: status).select{|t| t.schedule.between?(start_date, end_date) } }
+  #CENTRAL
+  scope :status_since, -> (status, start_date, end_date, attr) { where(status: status).select{|t| t.send(attr).between?(start_date, end_date) } }
 
-  scope :num_status_since, -> (status, start_date, end_date) { status_since(status, start_date, end_date).count }
+  scope :num_status_since, -> (status, start_date, end_date, attr = "schedule") { status_since(status, start_date, end_date, attr).count }
 
   def schedule
     self.rescheduled_at.nil? ? self.scheduled_for : self.rescheduled_at
@@ -43,6 +50,10 @@ class Tweet < ActiveRecord::Base
   #accessors views
   def scheduled_for_time
     local_time(self.scheduled_for)
+  end
+
+  def rescheduled_at_time
+    local_time(self.rescheduled_at)
   end
 
   def sent_at_time
@@ -58,6 +69,7 @@ class Tweet < ActiveRecord::Base
 
 
   #if task status goes awry, we reset to pristine condition
+  #sheduled_for already UTC
   def reset
     self.update_attributes(status: "QUEUED",
                            rescheduled_at: nil,
@@ -73,8 +85,13 @@ class Tweet < ActiveRecord::Base
   #But if we're rate-limited, we'll retry . . . only later
   def deliver
 
-    begin      
-      if !rate_limited? && retry?
+    begin
+
+      if self.user.reauth
+        self.update_attributes(status: "UNAUTHORIZED",
+                               rescheduled_at: (Time.now + REAUTH_RESCHEDULE).utc)
+
+      elsif (!rate_limited? && retry?)
 
         client = self.user.twitter_client
         self.increment!(:attempts, 1)
@@ -109,7 +126,8 @@ class Tweet < ActiveRecord::Base
   private
 
   def local_time(_time)
-    ActiveSupport::TimeZone
+    _time.nil? ? "-" :
+      ActiveSupport::TimeZone
       .new(self.user.timezone)
       .parse(_time.to_s).strftime("%m-%d-%y %I:%M %p")
   end
@@ -121,38 +139,52 @@ class Tweet < ActiveRecord::Base
     
     case error
 
+#DUPE DUPE DUPE
     when Twitter::Error::DuplicateStatus
       Delayed::Worker.logger.debug "==Duplicate=="
 
       #FAIL
-      self.update_attributes(rescheduled_at: nil,
+      self.update_attributes(rescheduled_at: (Time.now + DUPLICATE_RESCHEDULE).utc,
                              status: "DUPLICATE",
                              sent_at: Time.now.utc)
 
+
+#AUTH AUTH AUTH
+    when Twitter::Error::BadRequest,
+      Twitter::Error::Unauthorized
+      Delayed::Worker.logger.debug "==Bad Request=="
+
+      self.update_attributes(status: "UNAUTHORIZED",
+                             rescheduled_at: (Time.now + REAUTH_RESCHEDULE).utc,
+                             sent_at: Time.now.utc)
+
+
+      self.user.update_attribute(:reauth, true)
+
+
+#RATE RATE RATE
     when Twitter::Error::TooManyRequests,
       Twitter::Error::Forbidden,
       RateLimited
 
-      Delayed::Worker.logger.debug "==Twitter Rate Limit=="
+      Delayed::Worker.logger.debug "==Twitter Error=="
 
-      #Now rate limited
-      #Handle errors in Tweet model, want access to error object
-      #with appropriate time value
+      #Now rate limited, reset time
 
-      rate_limit_reset = (Time.now + 5.minutes).to_i
+      rate_limit_reset = (Time.now + RATE_LIMIT_RESCHEDULE).to_i
       if defined?(error.rate_limit.reset_in)
         rate_limit_reset = error.rate_limit.reset_in || rate_limit_reset
       end
       
       set_rate_limited(rate_limit_reset + 1, true)
 
-
-
     else
 
-      #SOME UNKNOWN ERROR
+#SOME UNKNOWN ERROR
       Delayed::Worker.logger.debug "==Unspecified error=="
       raise UnknownException, error
+
+      #reset job?
     end
 
   end

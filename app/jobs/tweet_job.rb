@@ -11,6 +11,10 @@ class TweetJob < ActiveJob::Base
 
     tweet = job.arguments.first
 
+    #unauthorized? 
+    #will be handled by new rescheduled_at value
+    #and retry? is true
+   
     #retry logic
     if !tweet.rescheduled_at.nil? && tweet.retry?
       retry_job(queue: tweet.user.id,

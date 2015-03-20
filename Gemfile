@@ -55,4 +55,6 @@ group :development, :test do
   gem 'delayed_job_active_record'
   gem 'daemons'
   gem 'bootstrap-datepicker-rails'
+  gem 'aes'
+
 end

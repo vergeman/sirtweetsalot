@@ -12,6 +12,9 @@
     .box { margin-left: 0px;}
 }
 
+.tweetometer-data .box {
+    @extend .col-md-2, .col-xs-12;
+}
 
 .data {
     height: 70px;
@@ -39,8 +42,8 @@
 
 /*chart*/
 .chart-wrap {
-    @extend .col-md-5;
-    @extend .col-md-offset-1;
+    @extend .col-md-5, .col-sm-12;
+    @extend .col-md-offset-1, .col-sm-offset-0;
     height: 200px;
 }
 @media (max-width: 768px) {

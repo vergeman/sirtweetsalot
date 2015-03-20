@@ -37,6 +37,7 @@ GEM
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
     addressable (2.3.7)
+    aes (0.5.0)
     american_date (1.1.0)
     annotate (2.6.7)
       activerecord (>= 2.3.0)
@@ -221,6 +222,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  aes
   american_date
   annotate
   bootstrap-datepicker-rails

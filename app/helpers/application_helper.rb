@@ -1,5 +1,9 @@
 module ApplicationHelper
 
+  def title
+    "SIR TWEETS-A-LOT"
+  end
+
   def is_active?(path)
     current_page?(path) ? "active_nav" : ""
   end
