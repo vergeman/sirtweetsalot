@@ -1,7 +1,7 @@
 # config valid only for current version of Capistrano
 lock '3.4.0'
 
-set :application, 'Sir Tweets-A-Lot'
+set :application, 'sirtweetsalot'
 set :repo_url, 'git@github.com:vergeman/sirtweetsalot.git'
 set :user, "ubuntu"
 set :ssh_options, { :forward_agent => true }
@@ -29,6 +29,7 @@ namespace :deploy do
 
 end
 
+=begin
 after 'deploy:publishing', 'deploy:restart'           
 namespace :deploy do
   task :restart do
@@ -37,3 +38,5 @@ namespace :deploy do
     invoke 'delayed_job:restart'    
   end                                                
 end
+
+=end

@@ -54,10 +54,14 @@ group :development, :test do
   gem 'bootstrap-sass'
 
   gem 'american_date'
+  gem 'delayed_job'
   gem 'delayed_job_active_record'
   gem 'daemons'
   gem 'bootstrap-datepicker-rails'
   gem 'aes'
 
   gem 'capistrano'
+  gem 'capistrano-rails'
+  gem 'capistrano-rvm'
+  gem 'capistrano-bundler'
 end

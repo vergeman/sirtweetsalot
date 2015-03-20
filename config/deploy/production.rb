@@ -8,19 +8,19 @@
 # server 'db.example.com', user: 'deploy', roles: %w{db}
 
 
+
 set :stage, :production
-set :rails_env,     "production"
+set :rails_env, "production"
 
 server ENV['SIRTWEETSALOT_PRODUCTION_IP'],
 user: ENV['SIRTWEETSALOT_PRODUCTION_USER'],
 roles: %w{web app db}, :primary => true,
 ssh_options: {
-  #   user: 'ubuntu', # overrides user setting above
   keys: ENV['SIRTWEETSALOT_PRODUCTION_SSH_KEY_PATH'],
   forward_agent: true,
   auth_methods: %w(publickey)
-  #  # password: 'please use keys'
 }
+
 # role-based syntax
 # ==================
 
