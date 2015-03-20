@@ -1,11 +1,8 @@
 class UsersController < ApplicationController
   before_filter :authenticate_user!, :verify_settings, :needs_reauth
 
+
   #user profile stuff, account setup
-  def show
-  end
-
-
   def edit
   end
 

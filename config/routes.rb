@@ -8,7 +8,8 @@ Rails.application.routes.draw do
     get 'sign_out', :to => 'devise/sessions#destroy', :as => :destroy_user_session
   end
 
-  resources :users, only: [:show, :edit, :update], as: 'account'
+  resources :users, only: [:edit, :update], as: 'account'
+
   resources :tweets, except: [:show] do
     collection do 
       delete 'destroy_multiple'

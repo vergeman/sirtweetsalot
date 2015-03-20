@@ -15,10 +15,9 @@ QUEUE
 
     <% @tweets.each_with_index do |t, i| %>
         <tr>
-            <td> <%= t.content%></td>
+            <td> <%= t.content %></td>
             <td> <%= t.scheduled_for_time %> </td>
             <td> <%= t.rescheduled_at_time %> </td>
-
             <td class="<%= status_class(t.status) %>"> <%= t.status %> </td>
             <td> <%= t.attempts %> </td>
             <td> <%= render partial: "controls", locals: {t: t} %> </td>

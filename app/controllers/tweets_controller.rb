@@ -87,16 +87,22 @@ class TweetsController < ApplicationController
     params[:tweet][:reset] == 1.to_s
   end
 
-  def order_params    
-    p = params[:order].to_s.reverse.split('_') #id_asc
-    p_key_val = Hash[p.each_slice(2).to_a] #{id => asc}
+  def order_params
+    p = params[:order].to_s.split('_')
+    sort_order = valid_order(p)
 
-    valid_sort_order = p_key_val.keys.any? { |k| ["asc", "desc"].include?(k.reverse) }
-    valid_attribute = Tweet.new.attributes.keys.any? { |k| k.include?(k) }
+    sort_attribute = params[:order].to_s.dup
+    sort_attribute.slice!("_#{sort_order}")
 
-    if valid_sort_order && valid_attribute
-      params[:order].to_s.reverse.sub('_', ' ').reverse
-    end
+    return "#{sort_attribute} #{sort_order}" if !sort_order.nil? && valid_attribute(sort_attribute)
+  end
+
+  def valid_order(p)
+    ["asc", "desc"].select{|w| w == p.last }.first
+  end
+
+  def valid_attribute(sort_attribute)
+    ["id", "content", "scheduled_for", "sent_at", "status", "rescheduled_at"].include?(sort_attribute)
   end
 
   def editable?

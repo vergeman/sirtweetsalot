@@ -10,16 +10,13 @@ class User < ActiveRecord::Base
 
   def self.from_omniauth(auth)
 
-    #user = where(provider: auth.provider, uid: auth.uid).first    
     user = where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
       user.attributes = auth.info.to_hash.slice(*User.attribute_names)
       user.image_url = auth.info.image
       user.password = Devise.friendly_token[0,20]
     end
-    puts user.inspect
 
     self.update_credentials(user, auth)
-    puts user.inspect
 
     return user
   end

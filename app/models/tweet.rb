@@ -20,8 +20,8 @@ class Tweet < ActiveRecord::Base
   SENT_STATES = ["FAILED", "SENT"]
   SENDING_STATES = ["QUEUED", "DELAYED", "DUPLICATE", "UNAUTHORIZED"]
 
-  scope :sent, ->(var_order) { where.not(status: SENDING_STATES).order('?', var_order)  }
-  scope :sendable, ->(var_order) { where.not(status: SENT_STATES).order('?', var_order) }
+  scope :sent, ->(var_order) { where.not(status: SENDING_STATES).order(var_order)  }
+  scope :sendable, ->(var_order) { where.not(status: SENT_STATES).order(var_order) }
   scope :num_queued, -> (from = Time.now.utc, to = (Time.now.utc + 7.days)) { scheduled_between(from, to).count }
 
 #QUICK QUEUE
