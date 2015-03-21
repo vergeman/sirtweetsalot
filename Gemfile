@@ -42,7 +42,7 @@ group :development, :test do
   gem 'web-console', '~> 2.0'
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
+ # gem 'spring'
 
 
   gem 'devise'
@@ -59,9 +59,13 @@ group :development, :test do
   gem 'daemons'
   gem 'bootstrap-datepicker-rails'
   gem 'aes'
+  gem 'passenger'
 
-  gem 'capistrano'
-  gem 'capistrano-rails'
-  gem 'capistrano-rvm'
-  gem 'capistrano-bundler'
+  group :development do
+    gem 'capistrano' 
+    gem 'capistrano-rvm'
+    gem 'capistrano-bundler'
+    gem 'capistrano-rails'
+  end
+
 end

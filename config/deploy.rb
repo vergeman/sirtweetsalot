@@ -1,6 +1,7 @@
 # config valid only for current version of Capistrano
 lock '3.4.0'
 
+
 set :application, 'sirtweetsalot'
 set :repo_url, 'git@github.com:vergeman/sirtweetsalot.git'
 set :user, "ubuntu"
@@ -11,9 +12,9 @@ set :delayed_job_command, "bin/delayed_job"
 set :deploy_to, "~/sirtweetsalot"
 
 #RVM
-set :rvm_type, :user                     # Defaults to: :auto
-#set :rvm_ruby_version, '2.0.0-p247'      # Defaults to: 'default'
-set :default_env, { rvm_bin_path: '~/.rvm/ruby-2.2.0@sirtweetsalot' }
+set :rvm_type, :auto                     # Defaults to: :auto
+set :rvm_ruby_version, '2.2.0@sirtweetsalot'      # Defaults to: 'default'
+#set :default_env, { rvm_bin_path: '~/.rvm/gems/ruby-2.2.0@sirtweetsalot/bin' }
 
 namespace :deploy do
 
