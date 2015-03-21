@@ -4,7 +4,7 @@ Devise.setup do |config|
   # The secret key used by Devise. Devise uses this key to generate
   # random tokens. Changing this key will render invalid all existing
   # confirmation, reset password and unlock tokens in the database.
-  # config.secret_key = '4c20a7316990c14bd4f414c9f6db6ee9106c475917d5b6405b823056e9f58a9791342ce9e97edbf7c5572d1de90abc3663b33f350b56b9037e6470552fd19d19'
+  config.secret_key = ENV['SIRTWEETSALOT_SECRET_KEY']
   #omniauth
   config.omniauth :twitter, ENV['TWITTER_API_KEY'], ENV['TWITTER_API_SECRET']
 
