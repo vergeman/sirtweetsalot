@@ -12,11 +12,11 @@ set :delayed_job_command, "bin/delayed_job"
 set :deploy_to, "~/sirtweetsalot"
 
 #RVM
-#set :rvm_type, :auto                     # Defaults to: :auto
-#set :rvm_ruby_version, '2.2.0@sirtweetsalot'      # Defaults to: 'default'
+set :rvm_type, :auto                     # Defaults to: :auto
+set :rvm_ruby_version, '2.2.0@sirtweetsalot'      # Defaults to: 'default'
 #set :default_env, { rvm_bin_path: '~/.rvm/gems/ruby-2.2.0@sirtweetsalot/bin' }
-set :rvm_type, :user
-set :default_env, { rvm_bin_path: '~/.rvm/bin' }
+#set :rvm_type, :user
+#set :default_env, { rvm_bin_path: '~/.rvm/bin' }
 
 namespace :deploy do
 
