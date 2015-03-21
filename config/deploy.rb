@@ -13,7 +13,7 @@ set :deploy_to, "~/sirtweetsalot"
 #RVM
 set :rvm_type, :user                     # Defaults to: :auto
 #set :rvm_ruby_version, '2.0.0-p247'      # Defaults to: 'default'
-set :default_env, { rvm_bin_path: '~/.rvm/bin' }
+set :default_env, { rvm_bin_path: '~/.rvm/ruby-2.2.0@sirtweetsalot' }
 
 namespace :deploy do
 
