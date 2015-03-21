@@ -1,6 +1,7 @@
 # config valid only for current version of Capistrano
 #lock '3.4.0'
-
+require 'dotenv'
+Dotenv.load
 
 set :application, 'sirtweetsalot'
 set :repo_url, 'git@github.com:vergeman/sirtweetsalot.git'
@@ -17,6 +18,8 @@ set :rvm_ruby_version, '2.2.0@sirtweetsalot'      # Defaults to: 'default'
 #set :default_env, { rvm_bin_path: '~/.rvm/gems/ruby-2.2.0@sirtweetsalot/bin' }
 #set :rvm_type, :user
 #set :default_env, { rvm_bin_path: '~/.rvm/bin' }
+
+set :linked_files, %w{.env}
 
 namespace :deploy do
 
