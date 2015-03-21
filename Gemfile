@@ -25,14 +25,22 @@ gem 'jbuilder', '~> 2.0'
 # bundle exec rake doc:rails generates the API under doc/api.
 gem 'sdoc', '~> 0.4.0', group: :doc
 
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
 
-# Use Unicorn as the app server
-# gem 'unicorn'
+gem 'devise'
+gem 'omniauth-twitter'
+gem 'roo'
+gem 'twitter'
 
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
+gem 'bootstrap-sass'
+
+gem 'american_date'
+gem 'delayed_job'
+gem 'delayed_job_active_record'
+gem 'daemons'
+gem 'bootstrap-datepicker-rails'
+gem 'aes'
+gem 'passenger'
+
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -44,28 +52,9 @@ group :development, :test do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
  # gem 'spring'
 
-
-  gem 'devise'
-  gem 'omniauth-twitter'
-  gem 'roo'
-  gem 'annotate'
-  gem 'twitter'
-
-  gem 'bootstrap-sass'
-
-  gem 'american_date'
-  gem 'delayed_job'
-  gem 'delayed_job_active_record'
-  gem 'daemons'
-  gem 'bootstrap-datepicker-rails'
-  gem 'aes'
-  gem 'passenger'
-
-  group :development do
-    gem 'capistrano' 
-    gem 'capistrano-rvm'
-    gem 'capistrano-bundler'
-    gem 'capistrano-rails'
-  end
+  gem 'capistrano', '~> 3.3.0'
+  gem 'capistrano-bundler', '>= 1.1.0'
+  gem 'capistrano-rvm'
+  gem 'capistrano-rails'
 
 end
