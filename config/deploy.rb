@@ -19,7 +19,7 @@ set :rvm_ruby_version, '2.2.0@sirtweetsalot'      # Defaults to: 'default'
 #set :rvm_type, :user
 #set :default_env, { rvm_bin_path: '~/.rvm/bin' }
 
-set :linked_files, %w{.env, .env.production}
+set :linked_files, %w{.env .env.production}
 
 namespace :deploy do
 
