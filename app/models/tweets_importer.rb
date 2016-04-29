@@ -30,6 +30,7 @@ class TweetsImporter
 
   #loop & parse
   def load_sheet
+
     spreadsheet = open_sheet
     header = spreadsheet.row(1)
 
@@ -40,7 +41,7 @@ class TweetsImporter
       tweet.attributes = row.to_hash.slice(*Tweet.attribute_names)
       
       #make sure year is flex (yy v yyyy)
-      tweet.scheduled_for = DateTime.parse(row.to_hash["scheduled_for"])
+      tweet.scheduled_for = row.to_hash["scheduled_for"]
 
       tweet.scheduled_for_time_to_utc
 
